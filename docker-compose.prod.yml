@@ -1,0 +1,223 @@
+version: '3.9'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: ecommerce-postgres-prod
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ecommerce-network
+    restart: always
+    security_opt:
+      - no-new-privileges:true
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: ecommerce-redis-prod
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ecommerce-network
+    restart: always
+    security_opt:
+      - no-new-privileges:true
+
+  # Zookeeper for Kafka coordination
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: ecommerce-zookeeper-prod
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_SYNC_LIMIT: 5
+      ZOOKEEPER_INIT_LIMIT: 10
+    ports:
+      - "2181:2181"
+    volumes:
+      - zookeeper_data:/var/lib/zookeeper/data
+      - zookeeper_logs:/var/lib/zookeeper/log
+    networks:
+      - ecommerce-network
+    restart: always
+    security_opt:
+      - no-new-privileges:true
+
+  # Apache Kafka Broker
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: ecommerce-kafka-prod
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://kafka:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
+      KAFKA_LOG_RETENTION_HOURS: 168
+    ports:
+      - "9092:9092"
+    volumes:
+      - kafka_data:/var/lib/kafka/data
+    networks:
+      - ecommerce-network
+    restart: always
+    security_opt:
+      - no-new-privileges:true
+
+  # Flask AI Service
+  ai-service:
+    image: ${DOCKER_REGISTRY:-docker.io}/${DOCKER_USERNAME}/ecommerce-ai-service:${VERSION:-latest}
+    container_name: ecommerce-ai-service-prod
+    depends_on:
+      kafka:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      FLASK_ENV: production
+      GROQ_API_KEY: ${GROQ_API_KEY}
+      PINECONE_API_KEY: ${PINECONE_API_KEY}
+      PINECONE_ENVIRONMENT: ${PINECONE_ENVIRONMENT}
+      KAFKA_BROKER: kafka:9092
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379
+      DB_URL: postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}
+      IS_AIRFLOW: "false"
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./ai-service/Logs:/app/Logs
+      - ./ai-service/artifacts:/app/artifacts
+    networks:
+      - ecommerce-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: always
+    security_opt:
+      - no-new-privileges:true
+
+  # Spring Boot E-commerce Service
+  ecommerce-service:
+    image: ${DOCKER_REGISTRY:-docker.io}/${DOCKER_USERNAME}/ecommerce-backend:${VERSION:-latest}
+    container_name: ecommerce-backend-prod
+    depends_on:
+      kafka:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${DB_NAME}
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+      SPRING_REDIS_PASSWORD: ${REDIS_PASSWORD}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      SPRING_JPA_SHOW_SQL: "false"
+      JWT_SECRET: ${JWT_SECRET}
+      SPRING_PROFILES_ACTIVE: prod
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./java_ecommerce_ready/logs:/app/logs
+    networks:
+      - ecommerce-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    restart: always
+    security_opt:
+      - no-new-privileges:true
+
+  # React Frontend
+  frontend:
+    image: ${DOCKER_REGISTRY:-docker.io}/${DOCKER_USERNAME}/ecommerce-frontend:${VERSION:-latest}
+    container_name: ecommerce-frontend-prod
+    depends_on:
+      - ai-service
+      - ecommerce-service
+    environment:
+      REACT_APP_API_URL: ${FRONTEND_API_URL}
+      REACT_APP_AI_URL: ${FRONTEND_AI_URL}
+      NODE_ENV: production
+    ports:
+      - "80:3000"
+    networks:
+      - ecommerce-network
+    restart: always
+    security_opt:
+      - no-new-privileges:true
+
+  # Kafka AI Worker
+  kafka-ai-worker:
+    image: ${DOCKER_REGISTRY:-docker.io}/${DOCKER_USERNAME}/ecommerce-kafka-worker:${VERSION:-latest}
+    container_name: ecommerce-kafka-worker-prod
+    depends_on:
+      kafka:
+        condition: service_started
+      ai-service:
+        condition: service_started
+    environment:
+      KAFKA_BROKER: kafka:9092
+      AI_SERVICE_URL: http://ai-service:5000
+      LOG_LEVEL: INFO
+    networks:
+      - ecommerce-network
+    restart: always
+    security_opt:
+      - no-new-privileges:true
+
+networks:
+  ecommerce-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  zookeeper_data:
+    driver: local
+  zookeeper_logs:
+    driver: local
+  kafka_data:
+    driver: local

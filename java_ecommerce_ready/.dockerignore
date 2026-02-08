@@ -1,0 +1,72 @@
+# Standard .dockerignore patterns for Java services
+
+# Version control
+.git
+.gitignore
+.gitattributes
+
+# CI/CD
+.github
+.gitlab-ci.yml
+.circleci
+
+# Maven specific
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+.classpath
+.project
+.settings/
+bin/
+
+# IDE
+.vscode
+.idea
+*.iml
+*.iws
+*.ipr
+.gradle
+.nb-gradle/
+
+# Build artifacts
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Testing
+target/test-classes
+.junit/
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+tmp
+temp
+*.tmp
+
+# Documentation
+docs
+README.md
+
+# Environment
+.env
+.env.local
+secrets/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Application specific
+data/
+uploads/

@@ -1,0 +1,106 @@
+# Docker Build Arguments and Optimization
+# This file documents Docker build best practices
+
+# Standard .dockerignore patterns for all services
+
+# Version control
+.git
+.gitignore
+.gitattributes
+
+# CI/CD
+.github
+.gitlab-ci.yml
+.circleci
+.travis.yml
+Jenkins*
+.jenkins
+
+# Build and dependency artifacts
+node_modules
+npm-debug.log
+yarn-debug.log
+.gradle
+build
+target
+*.jar
+*.war
+dist
+.env.local
+*.pyc
+__pycache__
+.pytest_cache
+*.egg-info
+.eggs
+
+# IDE and editor files
+.vscode
+.idea
+.sublime-text-project
+.vscode-server
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+*.sublime-project
+*.sublime-workspace
+
+# Testing
+.coverage
+htmlcov
+.tox
+.test*
+test-results
+
+# Temporary files
+*.log
+logs
+tmp
+temp
+*.tmp
+*.bak
+
+# Documentation
+docs
+*.md
+!README.md (keep in some cases)
+
+# Container specific
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Environment
+.env
+.env.local
+.env.*.local
+secrets/
+
+# OS specific
+.DS_Store
+.AppleDouble
+.LSOverride
+*.swp
+*.swo
+
+# Package managers
+.npm
+.yarn/cache
+rush/.rush/temp
+
+# Cache
+.cache
+cache/
+.nuget/
+
+# Development specific
+local.conf
+.vscode
+.vscode-server
+devcontainer.json
+
+# Application specific
+*.sqlite
+*.db
+*.sqlite3

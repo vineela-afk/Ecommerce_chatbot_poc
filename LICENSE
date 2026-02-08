@@ -1,0 +1,63 @@
+# Project License
+
+This is a sample LICENSE file. Replace with your actual license.
+
+## MIT License
+
+Copyright (c) 2026 Your Company Name
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+## Third-Party Dependencies
+
+This project uses the following open-source libraries:
+
+### Python Dependencies
+- Flask - BSD License
+- LangChain - MIT License
+- Pinecone - Proprietary
+- Kafka-Python - Apache 2.0
+- Pandas - BSD 3-Clause License
+- NumPy - BSD License
+
+### Java Dependencies
+- Spring Boot - Apache 2.0
+- Spring Security - Apache 2.0
+- Spring Kafka - Apache 2.0
+- Resilience4j - Apache 2.0
+- Lombok - MIT License
+
+### JavaScript Dependencies
+- React - MIT License
+- Axios - MIT License
+- React Scripts - MIT License
+
+### Infrastructure
+- Docker - Apache 2.0
+- Apache Kafka - Apache 2.0
+- PostgreSQL - PostgreSQL License
+- Redis - BSD 3-Clause License
+- Apache Airflow - Apache 2.0
+
+For the complete and up-to-date list of dependencies and their licenses, please refer to:
+- `ai-service/requirements.txt`
+- `java_ecommerce_ready/pom.xml`
+- `frontend/package.json`
