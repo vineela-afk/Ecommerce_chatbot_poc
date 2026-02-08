@@ -1,0 +1,28 @@
+# Ignore ANY virtual environment folder anywhere
+**/venv/
+**/.venv/
+**/env/
+**/ENV/
+
+# Python cache (anywhere)
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+
+# Environment variable files (anywhere)
+**/.env
+**/.env.*
+
+# Logs (anywhere)
+**/*.log
+
+# Frontend dependencies (anywhere)
+**/node_modules/
+
+# OS files
+**/.DS_Store
+
+# IDE files
+**/.vscode/
+**/.idea/
