@@ -3,6 +3,7 @@ import sys
 import time
 from typing import List
 from dataclasses import dataclass
+from pathlib import Path
 
 from langchain_community.document_loaders.csv_loader import CSVLoader
 from langchain_nvidia_ai_endpoints import NVIDIAEmbeddings
@@ -26,7 +27,9 @@ class VectorStoreBuilderConfig:
         path = "/opt/airflow/artifacts/data_cleaned.csv"
 
     else:
-        path = "artifacts/data_cleaned.csv"
+        # Build path relative to the ai-service directory
+        _current_dir = Path(__file__).parent.parent.parent
+        path = str(_current_dir / "artifacts" / "data_cleaned.csv")
 
 class VectorStoreBuilder:
     """

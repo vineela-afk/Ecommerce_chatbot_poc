@@ -51,10 +51,10 @@ class DataCleaner:
     def check_for_na(self, df: DataFrame):
         try:
             logging.info("Checking for 'na' values")
-            df_na = df[df.applymap(lambda x: str(x).strip().lower() == 'na').any(axis=1)]
+            df_na = df[df.map(lambda x: str(x).strip().lower() == 'na').any(axis=1)]
             print(f"Total number of records that has 'na': {len(df_na)}")
 
-            columns_na = df.applymap(lambda x: str(x).strip().lower() == 'na').sum()
+            columns_na = df.map(lambda x: str(x).strip().lower() == 'na').sum()
             print(f"\ncolumn wise presence of 'na' \n{columns_na}")
 
         except Exception as e:
@@ -65,7 +65,7 @@ class DataCleaner:
 
     def find_mode(self, df: DataFrame):
         try:
-            df_without_na = df[~df.applymap(lambda x: str(x).strip().lower() == 'na').any(axis=1)]
+            df_without_na = df[~df.map(lambda x: str(x).strip().lower() == 'na').any(axis=1)]
 
             cols = df.select_dtypes(include=['object', 'category']).columns
 

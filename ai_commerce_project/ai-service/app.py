@@ -4,7 +4,7 @@ import os
 from src.utils.chatbot_utils import BuildChatbot
 from src.utils.logger import logging
 from src.utils.exception import Custom_exception
-
+from flask_cors import CORS
 from flask import Flask, request, render_template, jsonify
 
 
@@ -16,7 +16,8 @@ utils = BuildChatbot()
 chatbot = utils.initialize_chatbot()
 
 
-
+app = Flask(__name__)
+CORS(app)
 # route for home page
 @app.route('/')
 def home():
