@@ -1,0 +1,10 @@
+/Users/vineelaampili/Ecommerce_chatbot_poc/ai_commerce_project/java_ecommerce_ready/src/main/java/com/ecommerce/Application.java
+/Users/vineelaampili/Ecommerce_chatbot_poc/ai_commerce_project/java_ecommerce_ready/src/main/java/com/ecommerce/service/OrderService.java
+/Users/vineelaampili/Ecommerce_chatbot_poc/ai_commerce_project/java_ecommerce_ready/src/main/java/com/ecommerce/controller/InventoryController.java
+/Users/vineelaampili/Ecommerce_chatbot_poc/ai_commerce_project/java_ecommerce_ready/src/main/java/com/ecommerce/model/Order.java
+/Users/vineelaampili/Ecommerce_chatbot_poc/ai_commerce_project/java_ecommerce_ready/src/main/java/com/ecommerce/config/SecurityConfig.java
+/Users/vineelaampili/Ecommerce_chatbot_poc/ai_commerce_project/java_ecommerce_ready/src/main/java/com/ecommerce/controller/PaymentController.java
+/Users/vineelaampili/Ecommerce_chatbot_poc/ai_commerce_project/java_ecommerce_ready/src/main/java/com/ecommerce/controller/ProductController.java
+/Users/vineelaampili/Ecommerce_chatbot_poc/ai_commerce_project/java_ecommerce_ready/src/main/java/com/ecommerce/controller/OrderController.java
+/Users/vineelaampili/Ecommerce_chatbot_poc/ai_commerce_project/java_ecommerce_ready/src/main/java/com/ecommerce/controller/AuthController.java
+/Users/vineelaampili/Ecommerce_chatbot_poc/ai_commerce_project/java_ecommerce_ready/src/main/java/com/ecommerce/kafka/KafkaProducer.java
