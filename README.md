@@ -549,4 +549,3 @@ For questions or issues, please open an issue on GitHub or contact the developme
 
 ---
 
-**Last Updated**: February 9, 2026

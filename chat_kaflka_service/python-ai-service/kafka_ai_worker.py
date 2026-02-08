@@ -27,3 +27,4 @@ for message in consumer:
 
     producer.send("chat_responses", result)
     print("Processed:", session_id)
+# This code sets up a Kafka consumer that listens to the 'chat_requests' topic for incoming chat messages. When a message is received, it processes the input and generates a response. The response is then sent back to the 'chat_responses' topic.
